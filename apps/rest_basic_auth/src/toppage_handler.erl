@@ -9,21 +9,22 @@
 -export([to_text/2]).
 
 init(_Transport, _Req, []) ->
-	{upgrade, protocol, cowboy_rest}.
+    {upgrade, protocol, cowboy_rest}.
 
 is_authorized(Req, State) ->
-	{ok, Auth, Req1} = cowboy_req:parse_header(<<"authorization">>, Req),
-	case Auth of
-		{<<"basic">>, {User = <<"Alladin">>, <<"password">>}} ->
-			{true, Req1, User};
-		_ ->
-			{{false, <<"Basic realm=\"cowboy\"">>}, Req1, State}
-	end.
+    {ok, Auth, Req1} = cowboy_req:parse_header(<<"authorization">>, Req),
+    case Auth of
+	{<<"basic">>, {User = <<"Alladin">>, <<"password">>}} ->
+	    timer:sleep(5000),
+	    {true, Req1, User};
+	_ ->
+	    {{false, <<"Basic realm=\"cowboy\"">>}, Req1, State}
+    end.
 
 content_types_provided(Req, State) ->
-	{[
-		{<<"text/plain">>, to_text}
-	], Req, State}.
+    {[
+      {<<"text/plain">>, to_text}
+     ], Req, State}.
 
 to_text(Req, User) ->
-	{<< "Hello, ", User/binary, "!\n" >>, Req, User}.
+    {<< "Hello, ", User/binary, "!\n" >>, Req, User}.
